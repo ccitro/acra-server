@@ -845,7 +845,7 @@ class Crash
         $stackTrace = $this->getShortStackTrace();
 
         $patterns = array(
-            '/(javax.net.ssl.SSLException: Read error: ssl=0x)[0-9A-F]+(: )/'
+            '/(javax.net.ssl.SSLException: Read error: ssl=0x)[0-9a-fA-F]+(: )/'
         );
         $replacements = array (
             '$1$2'
