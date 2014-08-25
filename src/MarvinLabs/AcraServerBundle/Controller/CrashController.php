@@ -70,8 +70,16 @@ class CrashController extends Controller
             $notify = true;
         }
         else if($this->container->getParameter('notify_on_new_issue') === 'yes') {
+            global $kernel;
+            if ('AppCache' == get_class($kernel)) $kernel = $kernel->getKernel();
+            $logger = $kernel->getContainer()->get('logger');
+
             if ($this->crashIsFirstForIssue($crash)) {
+                $logger->warn("Crash #".$crash->getId()." is the first for issue #".$crash->getIssueId());
                 $notify = true;
+            }
+            else {
+                $logger->warn("Crash #".$crash->getId()." is a repeat of issue #".$crash->getIssueId());
             }
         }
 
