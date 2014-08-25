@@ -28,9 +28,9 @@
 		{{ fields.echo('Package', crash.packageName) }}
 		{{ fields.echo('Version', "#{ crash.appVersionName } ~ #{ crash.appVersionCode }", crash.appVersionName) }}
 		{{ fields.echo('Status', crash.statusAsString) }}
-		{{ fields.echo('App crash', "#{crash.userCrashDate | date('Y-m-d H:i:s')} (UTC)", crash.userCrashDate) }}
-		{{ fields.echo('App start', "#{crash.userAppStartDate | date('Y-m-d H:i:s')} (UTC)", crash.userAppStartDate) }}
-		{{ fields.echo('Submitted', "#{crash.createdAt | date('Y-m-d H:i:s')} (UTC)", crash.createdAt) }}
+		{{ fields.echo('App crash', "#{crash.userCrashDate | date('Y-m-d H:i:s e')}", crash.userCrashDate) }}
+		{{ fields.echo('App start', "#{crash.userAppStartDate | date('Y-m-d H:i:s e')}", crash.userAppStartDate) }}
+		{{ fields.echo('Submitted', "#{crash.createdAt | date('Y-m-d H:i:s e')}", crash.createdAt) }}
 		{{ fields.echo('User comment', crash.userComment) }}
 		{{ fields.echo('User email', crash.userEmail) }}
 	</ul>
