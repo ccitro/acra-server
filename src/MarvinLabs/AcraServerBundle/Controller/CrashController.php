@@ -39,19 +39,64 @@ class CrashController extends Controller
    		$doctrine->flush();
 
         $protocol = $this->container->getParameter('use_https') === 'yes' ? 'https' : http;
-   		
-   		// Send notification email
-		$this->sendNewCrashNotification(
-				$this->get('mailer'),
-				$this->get('twig'),
-				$this->container->getParameter('notifications_from'),
-				$this->container->getParameter('notifications_to'),
-				$crash,
-                $protocol
-			);
+        $sendNotification = $this->shouldNotifyForCrash($crash);
+
+        if ($sendNotification) {
+            // Send notification email
+            $this->sendNewCrashNotification(
+                    $this->get('mailer'),
+                    $this->get('twig'),
+                    $this->container->getParameter('notifications_from'),
+                    $this->container->getParameter('notifications_to'),
+                    $crash,
+                    $protocol
+                );
+        }
    		
 		return new Response( '' );
 	}
+
+    /**
+     * Checks if a crash should trigger notification, based on config parameters
+     *
+     * @param \MarvinLabs\AcraServerBundle\Entity\Crash $crash
+     * @return boolean
+     */
+    private function shouldNotifyForCrash(Crash $crash)
+    {
+        $notify = false;
+
+        if ($this->container->getParameter('notify_on_crash') === 'yes') {
+            $notify = true;
+        }
+        else if($this->container->getParameter('notify_on_new_issue') === 'yes') {
+            if ($this->crashIsFirstForIssue($crash)) {
+                $notify = true;
+            }
+        }
+
+        return $notify;
+    }
+
+    /**
+     * Checks if a given crash is the first for its issueId
+     *
+     * @param \MarvinLabs\AcraServerBundle\Entity\Crash $crash
+     * @return boolean
+     */
+    private function crashIsFirstForIssue(Crash $crash) {
+        $doctrine = $this->getDoctrine()->getManager();
+        $crashRepo = $doctrine->getRepository('MLabsAcraServerBundle:Crash');
+        $crashes = $crashRepo->newIssueDetailsQuery($crash->getIssueId())->setMaxResults(2)->getResult();
+
+        foreach ($crashes as $crashOnRecord) {
+            if($crash->getId() !== $crashOnRecord->getId()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
     
     /**
      * Send an email notification about a new crash
