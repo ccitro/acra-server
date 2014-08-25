@@ -30,6 +30,10 @@
 		{{ fields.echo('App versions', appVersions) }}
 		{{ fields.echo('Android versions', androidVersions) }}
 		{{ fields.echo('Latest crash', "#{issue.latestCrashDate | date('Y-m-d H:i:s')} (UTC)", issue.latestCrashDate) }}
+    
+    {% if crashes %}
+    {{ fields.echo('Stacktrace Summary', crash.shortStackTrace, crashes[0].shortStackTrace, 'pre') }}
+    {% endif %}
 	</ul>
 </section>
 
