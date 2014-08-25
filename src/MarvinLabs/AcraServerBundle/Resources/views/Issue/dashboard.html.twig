@@ -61,7 +61,7 @@
 					
 					<tr>
 						<td class="package-name">{{ c.packageName }}</td>
-						<td class="created-at">{{ c.latestCrashDate | date('d/m/Y H:i') }} (UTC)</td>
+						<td class="created-at">{{ c.latestCrashDate | date('m/d/Y H:i') }} (UTC)</td>
 						<td class="crash-num">{{ c.crashNum }}</td>
 						<td class="app-version" title="{{ appVersions|e }}">{{ shortAppVersions }}</td>
 						<td class="android-version" title="{{ androidVersions|e }}">{{ shortAndroidVersions }}</td>
