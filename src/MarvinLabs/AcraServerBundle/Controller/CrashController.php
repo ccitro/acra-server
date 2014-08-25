@@ -70,14 +70,16 @@ class CrashController extends Controller
             $notify = true;
         }
         else if($this->container->getParameter('notify_on_new_issue') === 'yes') {
-            global $kernel;
-            if ('AppCache' == get_class($kernel)) $kernel = $kernel->getKernel();
-            $logger = $kernel->getContainer()->get('logger');
-
             $numCrashesForIssue = $this->getNumberOfCrashesForIssue($crash->getIssueId());
-            $logger->warn("Crash #".$crash->getId()." recorded, has happened {$numCrashesForIssue} time(s) for issue #".$crash->getIssueId());
 
             if ($numCrashesForIssue === 1) {
+                $notify = true;
+            }
+        }
+        else if($this->container->getParameter('notify_on_first_crash_of_issue_daily') === 'yes') {
+            $crashesToday = $this->getNumberOfCrashesForIssueToday($crash->getIssueId());
+
+            if ($crashesToday === 1) {
                 $notify = true;
             }
         }
@@ -100,6 +102,30 @@ class CrashController extends Controller
     }
     
     /**
+     * Gets the number of crashes for an issueId today
+     *
+     * @param string $issueId
+     * @return int
+     */
+    private function getNumberOfCrashesForIssueToday($issueId) {
+        $doctrine = $this->getDoctrine()->getManager();
+        $crashRepo = $doctrine->getRepository('MLabsAcraServerBundle:Crash');
+        $crashes = $crashRepo->newIssueCrashesQuery($issueId)->getResult();
+
+        $count = 0;
+        $today = date('Y-m-d');
+
+        foreach ($crashes as $crash) {
+            $crashCreatedAt = $crash->getCreatedAt();
+            if ($crashCreatedAt->format('Y-m-d') === $today) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
      * Send an email notification about a new crash
      */
     private function sendNewCrashNotification($mailer, $twig, $from, $to, Crash $crash, $protocol)
@@ -118,6 +144,7 @@ class CrashController extends Controller
                         'crash' => $crash,
                         'protocol' => $protocol,
                         'numberOfCrashes' => $this->getNumberOfCrashesForIssue($crash->getIssueId()),
+                        'numberOfCrashesToday' => $this->getNumberOfCrashesForIssueToday($crash->getIssueId()),
                     ))
 	            );
 	    		

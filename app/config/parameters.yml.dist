@@ -27,6 +27,7 @@ parameters:
     # EMAIL NOTIFICATIONS
     notifications_from: acra-server@example.com
     notifications_to: acra-admin@example.com
+    notify_on_first_crash_of_issue_daily: yes
     notify_on_new_issue: yes
     notify_on_crash: yes
     
