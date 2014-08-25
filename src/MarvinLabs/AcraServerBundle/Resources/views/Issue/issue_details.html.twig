@@ -32,7 +32,7 @@
 		{{ fields.echo('Latest crash', "#{issue.latestCrashDate | date('Y-m-d H:i:s')} (UTC)", issue.latestCrashDate) }}
     
     {% if crashes %}
-    {{ fields.echo('Stacktrace Summary', crash.shortStackTrace, crashes[0].shortStackTrace, 'pre') }}
+    {{ fields.echo('Stacktrace Summary', crashes[0].shortStackTrace, crashes[0].shortStackTrace, 'pre') }}
     {% endif %}
 	</ul>
 </section>
