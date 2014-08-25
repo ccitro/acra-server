@@ -317,7 +317,7 @@ class Crash
      */
     public function __construct()
     {
-    	$this->setCreatedAt(new \DateTime(null, new \DateTimeZone('UTC')));
+    	$this->setCreatedAt(new \DateTime());
     	$this->setStatus(self::$STATUS_NEW);
     }
 

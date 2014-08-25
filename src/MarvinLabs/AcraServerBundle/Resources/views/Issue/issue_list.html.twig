@@ -24,8 +24,8 @@
 		{% for c in crashes %}
 			<tr>
 				<td class="id">#{{ c.id }}</td>
-				<td class="created-at">{{ c.createdAt | date('m/d/Y H:i e') }}</td>
-				<td class="user-crash-date">{{ c.userCrashDate | date('m/d/Y H:i e') }}</td>
+				<td class="created-at">{{ c.createdAt | date('m/d/Y H:i') }}</td>
+				<td class="user-crash-date">{{ c.userCrashDate | date('m/d/Y H:i') }}</td>
 				<td class="package-name">{{ c.packageName }}</td>
 				<td class="app-version">{{ c.appVersionName }}</td>
 				<td class="android-version">{{ c.androidVersion }}</td>
