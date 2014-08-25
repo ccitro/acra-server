@@ -22,6 +22,7 @@ parameters:
     
     # SECURITY
     secret: 922cd7bd666aeeb3d1163a7c1a4fb62e70746dce
+    use_https: yes
     
     # EMAIL NOTIFICATIONS
     notifications_from: acra-server@example.com

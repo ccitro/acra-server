@@ -37,6 +37,8 @@ class CrashController extends Controller
   		$doctrine = $this->getDoctrine()->getManager();
 		$doctrine->persist($crash);
    		$doctrine->flush();
+
+        $protocol = $this->container->getParameter('use_https') === 'yes' ? 'https' : http;
    		
    		// Send notification email
 		$this->sendNewCrashNotification(
@@ -45,7 +47,7 @@ class CrashController extends Controller
 				$this->container->getParameter('notifications_from'),
 				$this->container->getParameter('notifications_to'),
 				$crash,
-                $request->isSecure() ? 'https' : 'http'
+                $protocol
 			);
    		
 		return new Response( '' );
