@@ -145,6 +145,7 @@ class CrashController extends Controller
                         'protocol' => $protocol,
                         'numberOfCrashes' => $this->getNumberOfCrashesForIssue($crash->getIssueId()),
                         'numberOfCrashesToday' => $this->getNumberOfCrashesForIssueToday($crash->getIssueId()),
+                        'hashBasedOn' => $crash->getNormalizedStacktrace(),
                     ))
 	            );
 	    		
