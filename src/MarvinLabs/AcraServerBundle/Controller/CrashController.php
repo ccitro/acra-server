@@ -74,12 +74,11 @@ class CrashController extends Controller
             if ('AppCache' == get_class($kernel)) $kernel = $kernel->getKernel();
             $logger = $kernel->getContainer()->get('logger');
 
-            if ($this->crashIsFirstForIssue($crash)) {
-                $logger->warn("Crash #".$crash->getId()." is the first for issue #".$crash->getIssueId());
+            $numCrashesForIssue = $this->getNumberOfCrashesForIssue($crash->getIssueId());
+            $logger->warn("Crash #".$crash->getId()." recorded, has happened {$numCrashesForIssue} time(s) for issue #".$crash->getIssueId());
+
+            if ($numCrashesForIssue === 1) {
                 $notify = true;
-            }
-            else {
-                $logger->warn("Crash #".$crash->getId()." is a repeat of issue #".$crash->getIssueId());
             }
         }
 
@@ -87,23 +86,17 @@ class CrashController extends Controller
     }
 
     /**
-     * Checks if a given crash is the first for its issueId
+     * Gets the number of crashes for an issueId
      *
-     * @param \MarvinLabs\AcraServerBundle\Entity\Crash $crash
-     * @return boolean
+     * @param string $issueId
+     * @return int
      */
-    private function crashIsFirstForIssue(Crash $crash) {
+    private function getNumberOfCrashesForIssue($issueId) {
         $doctrine = $this->getDoctrine()->getManager();
         $crashRepo = $doctrine->getRepository('MLabsAcraServerBundle:Crash');
-        $crashes = $crashRepo->newIssueDetailsQuery($crash->getIssueId())->setMaxResults(2)->getResult();
+        $crashes = $crashRepo->newIssueCrashesQuery($issueId)->getResult();
 
-        foreach ($crashes as $crashOnRecord) {
-            if($crash->getId() !== $crashOnRecord->getId()) {
-                return false;
-            }
-        }
-
-        return true;
+        return count($crashes);
     }
     
     /**
