@@ -102,7 +102,7 @@ class CrashController extends Controller
     /**
      * Send an email notification about a new crash
      */
-    private function sendNewCrashNotification($mailer, $twig, $from, $to, $crash, $protocol)
+    private function sendNewCrashNotification($mailer, $twig, $from, $to, Crash $crash, $protocol)
     {
     	$message = \Swift_Message::newInstance()
 	    	->setFrom($from)
@@ -114,7 +114,11 @@ class CrashController extends Controller
 	        ->setBody(
 	            $twig
 	    			->loadTemplate('MLabsAcraServerBundle:Notifications:crash_notification_body.html.twig')
-	                ->render(array('crash' => $crash, 'protocol' => $protocol))
+	                ->render(array(
+                        'crash' => $crash,
+                        'protocol' => $protocol,
+                        'numberOfCrashes' => $this->getNumberOfCrashesForIssue($crash->getIssueId()),
+                    ))
 	            );
 	    		
     	$mailer->send($message);
