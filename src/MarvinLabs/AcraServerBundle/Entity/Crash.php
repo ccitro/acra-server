@@ -831,6 +831,28 @@ class Crash
     	
     	return $res;
     }
+
+    /**
+     * Gets the normalized stack trace
+     *
+     * This is the short stack trace, with attempts made to remove any "randomness" that would
+     * otherwise cause crashes of the same issue to hash to different issue ids
+     *
+     * @return string
+     */
+    public function getNormalizedStacktrace()
+    {
+        $stackTrace = $this->getShortStackTrace();
+
+        $patterns = array(
+            '/(javax.net.ssl.SSLException: Read error: ssl=0x)[0-9A-F]+(: )/'
+        );
+        $replacements = array (
+            '$1$2'
+        );
+        
+        return preg_replace($patterns, $replacements, $stackTrace);
+    }
     
     function array_find($needle, $haystack)
     {
@@ -1333,7 +1355,7 @@ class Crash
      */
     public function computeIssueId() 
     {    	
-    	$issueId = md5($this->getShortStackTrace());
+    	$issueId = md5($this->getNormalizedStacktrace());
 
     	global $kernel;
     	if ('AppCache' == get_class($kernel)) $kernel = $kernel->getKernel();
