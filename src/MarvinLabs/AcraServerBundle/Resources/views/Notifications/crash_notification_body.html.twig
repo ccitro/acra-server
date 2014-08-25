@@ -4,7 +4,7 @@ There is a new crash (issue #{{ crash.issueId }}) for your application {{ crash.
 
 Link
 --
-{{ url('_crash_details', {'id': crash.id}) }}
+{{ protocol }}:{{ url('_crash_details', {'id': crash.id}, true) }}
 
 Stacktrace:
 --

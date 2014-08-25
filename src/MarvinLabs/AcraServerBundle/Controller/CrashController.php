@@ -29,8 +29,9 @@ class CrashController extends Controller
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
 	public function addAction()
-	{	
-    	$crash = $this->newCrashFromRequest($this->getRequest());
+	{
+        $request = $this->getRequest();
+    	$crash = $this->newCrashFromRequest($request);
 
        	// Persist crash
   		$doctrine = $this->getDoctrine()->getManager();
@@ -43,7 +44,8 @@ class CrashController extends Controller
 				$this->get('twig'),
 				$this->container->getParameter('notifications_from'),
 				$this->container->getParameter('notifications_to'),
-				$crash
+				$crash,
+                $request->isSecure() ? 'https' : 'http'
 			);
    		
 		return new Response( '' );
@@ -52,7 +54,7 @@ class CrashController extends Controller
     /**
      * Send an email notification about a new crash
      */
-    private function sendNewCrashNotification($mailer, $twig, $from, $to, $crash)
+    private function sendNewCrashNotification($mailer, $twig, $from, $to, $crash, $protocol)
     {
     	$message = \Swift_Message::newInstance()
 	    	->setFrom($from)
@@ -64,7 +66,7 @@ class CrashController extends Controller
 	        ->setBody(
 	            $twig
 	    			->loadTemplate('MLabsAcraServerBundle:Notifications:crash_notification_body.html.twig')
-	                ->render(array('crash' => $crash))
+	                ->render(array('crash' => $crash, 'protocol' => $protocol))
 	            );
 	    		
     	$mailer->send($message);
