@@ -851,7 +851,22 @@ class Crash
             '$1$2'
         );
         
-        return preg_replace($patterns, $replacements, $stackTrace);
+        $normalized = preg_replace($patterns, $replacements, $stackTrace);
+        
+        $lines = explode("\n", $normalized);
+        $truncated = "";
+        foreach ($lines as $line) {
+            $truncated .= $line . "\n";
+            
+            // after the first "   at ..." line, truncate the rest
+            // we care more about the specific line (within our package) that threw the exception
+            // than about the full backtrace
+            if (preg_match('/^\s*at /', $line)) {
+                break;
+            }
+        }
+
+        return rtrim($truncated, "\n");
     }
     
     function array_find($needle, $haystack)
