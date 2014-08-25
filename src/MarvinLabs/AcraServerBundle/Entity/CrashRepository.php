@@ -163,7 +163,7 @@ class CrashRepository extends EntityRepository
         			. "FROM MarvinLabs\AcraServerBundle\Entity\Crash c "
         			. "WHERE " . $where 
         			. "GROUP BY c.issueId "
-        			. "ORDER BY c.userCrashDate DESC ";
+        			. "ORDER BY c.createdAt DESC ";
     	    	
         return $this->getEntityManager()
         		->createQuery($query)
@@ -190,7 +190,7 @@ class CrashRepository extends EntityRepository
     	$query = "SELECT c "
         			. "FROM MarvinLabs\AcraServerBundle\Entity\Crash c "
         			. "WHERE " . $where 
-        			. "ORDER BY c.userCrashDate DESC ";
+        			. "ORDER BY c.createdAt DESC ";
     	    	
         return $this->getEntityManager()
         		->createQuery($query)
@@ -225,7 +225,7 @@ class CrashRepository extends EntityRepository
         			. "FROM MarvinLabs\AcraServerBundle\Entity\Crash c "
         			. "WHERE " . $where 
         			. "GROUP BY c.issueId "
-        			. "ORDER BY c.userCrashDate DESC ";
+        			. "ORDER BY c.createdAt DESC ";
 
     	return $this->getEntityManager()
 		    	->createQuery($query)
