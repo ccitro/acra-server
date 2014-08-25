@@ -200,11 +200,11 @@ class CrashController extends Controller
     	$crash->setUserEmail($requestData->get('USER_EMAIL', null));
     	
     	$tmpDateTime = new \DateTime( $requestData->get('USER_APP_START_DATE', null) );
-        $tmpDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $tmpDateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
     	$crash->setUserAppStartDate($tmpDateTime);
 
     	$tmpDateTime = new \DateTime( $requestData->get('USER_CRASH_DATE', null) );
-        $tmpDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $tmpDateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
     	$crash->setUserCrashDate($tmpDateTime);
     	
     	return $crash;
