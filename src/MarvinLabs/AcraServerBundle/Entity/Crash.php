@@ -845,10 +845,12 @@ class Crash
         $stackTrace = $this->getShortStackTrace();
 
         $patterns = array(
-            '/(javax.net.ssl.SSLException: Read error: ssl=0x)[0-9a-fA-F]+(: )/'
+            '/(javax.net.ssl.SSLException: Read error: ssl=0x)[0-9a-fA-F]+(: )/',
+            '/(java\.io\.FileNotFoundException: ).*(\n)/',
         );
         $replacements = array (
-            '$1$2'
+            '$1$2',
+            '$1$2',
         );
         
         $normalized = preg_replace($patterns, $replacements, $stackTrace);
