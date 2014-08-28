@@ -847,8 +847,10 @@ class Crash
         $patterns = array(
             '/(javax.net.ssl.SSLException: Read error: ssl=0x)[0-9a-fA-F]+(: )/',
             '/(java\.io\.FileNotFoundException: ).*(\n)/',
+            '/(at \[Source: org\.apache\.http\.conn\.EofSensorInputStream@)[0-9a-fA-F]+; line: \d+, column: \d+(\])/',
         );
         $replacements = array (
+            '$1$2',
             '$1$2',
             '$1$2',
         );
